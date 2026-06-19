@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baseline Model — KWASU</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #2e7d4f;
+            --green-light: #3a9e63;
+            --green-pale: #eaf5ee;
+            --green-mid: #c5e8d1;
+            --off-white: #f7faf8;
+            --text-dark: #0f1f17;
+            --text-light: #6b8c78;
+            --border: #d0e8da;
+            --shadow: 0 4px 24px rgba(46,125,79,0.10);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; }
+        header { background: var(--green); color: white; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 64px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+        .header-left { display: flex; align-items: center; gap: 14px; }
+        .uni-crest { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .uni-info h2 { font-size: 13px; font-weight: 700; }
+        .uni-info p { font-size: 11px; opacity: 0.85; }
+        .academic-year { font-size: 12px; opacity: 0.85; font-weight: 500; background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 20px; }
+        main { max-width: 760px; margin: 0 auto; padding: 40px 24px; }
+        .back { display: inline-flex; align-items: center; gap: 6px; color: var(--green); text-decoration: none; font-size: 13px; font-weight: 600; margin-bottom: 28px; padding: 8px 14px; background: white; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s; }
+        .back:hover { background: var(--green-pale); }
+        .page-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #fff8e1; color: #8a6500; border: 1px solid #ffe082; margin-bottom: 12px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--text-dark); margin-bottom: 6px; }
+        .page-sub { font-size: 13px; color: var(--text-light); margin-bottom: 28px; }
+        .info-bar { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 28px; display: flex; gap: 24px; }
+        .info-item { text-align: center; }
+        .info-val { font-size: 16px; font-weight: 700; color: var(--green); }
+        .info-key { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+        .input-card { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+        .input-card label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 10px; }
+        textarea { width: 100%; height: 200px; padding: 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; resize: vertical; outline: none; transition: border 0.2s; font-family: inherit; color: var(--text-dark); background: var(--off-white); }
+        textarea:focus { border-color: var(--green); background: white; }
+        button { width: 100%; padding: 14px; margin-top: 16px; background: var(--green); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; letter-spacing: 0.3px; }
+        button:hover { background: var(--green-light); }
+        .result { margin-top: 24px; padding: 28px; border-radius: 16px; text-align: center; }
+        .result.fake { background: #fff5f5; border: 2px solid #e74c3c; }
+        .result.real { background: var(--green-pale); border: 2px solid var(--green); }
+        .result-icon { font-size: 40px; margin-bottom: 10px; }
+        .result-label { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .fake .result-label { color: #e74c3c; }
+        .real .result-label { color: var(--green); }
+        .confidence { font-size: 14px; color: var(--text-light); }
+        .confidence strong { color: var(--text-dark); }
+        footer { background: var(--green); color: white; text-align: center; padding: 20px 40px; margin-top: 40px; }
+        footer p { font-size: 12px; opacity: 0.85; line-height: 1.7; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <div class="uni-crest">🎓</div>
+        <div class="uni-info">
+            <h2>Kwara State University</h2>
+            <p>Faculty of ICT — Department of Computer Science</p>
+        </div>
+    </div>
+    <div class="academic-year">2025 / 2026</div>
+</header>
+
+<main>
+    <a href="/" class="back">← Back to Home</a>
+    <div class="page-badge">Baseline Model</div>
+    <h1>🌲 Random Forest Only</h1>
+    <p class="page-sub">Standard classifier with no feature selection — uses all 5,000 TF-IDF features.</p>
+
+    <div class="info-bar">
+        <div class="info-item"><div class="info-val">5,000</div><div class="info-key">Features Used</div></div>
+        <div class="info-item"><div class="info-val">None</div><div class="info-key">Feature Selection</div></div>
+        <div class="info-item"><div class="info-val">100</div><div class="info-key">Decision Trees</div></div>
+        <div class="info-item"><div class="info-val">99.69%</div><div class="info-key">Test Accuracy</div></div>
+    </div>
+
+    <div class="input-card">
+        <label>Paste a news article below to analyse:</label>
+        <form method="POST">
+            <textarea name="article" placeholder="Paste the full text of a news article here..." required>{{ article }}</textarea>
+            <button type="submit">Analyse Article</button>
+        </form>
+
+        {% if prediction %}
+        <div class="result {{ prediction.lower() }}">
+            <div class="result-icon">{% if prediction == 'FAKE' %}❌{% else %}✅{% endif %}</div>
+            <div class="result-label">{% if prediction == 'FAKE' %}FAKE NEWS{% else %}REAL NEWS{% endif %}</div>
+            <div class="confidence">Model Confidence: <strong>{{ confidence }}%</strong></div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+
+<footer>
+    <p><strong>Kwara State University</strong> · Faculty of ICT · Department of Computer Science</p>
+    <p>Detecting Fake News Using PSO Feature Selection and Random Forest Algorithms · 2025/2026</p>
+</footer>
+</body>
+</html>

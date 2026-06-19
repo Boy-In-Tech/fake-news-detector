@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector — KWASU</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #2e7d4f;
+            --green-light: #3a9e63;
+            --green-pale: #eaf5ee;
+            --green-mid: #c5e8d1;
+            --off-white: #f7faf8;
+            --text-dark: #0f1f17;
+            --text-light: #6b8c78;
+            --border: #d0e8da;
+            --shadow: 0 4px 24px rgba(46,125,79,0.10);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; }
+        header { background: var(--green); color: white; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 64px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+        .header-left { display: flex; align-items: center; gap: 14px; }
+        .uni-crest { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .uni-info h2 { font-size: 13px; font-weight: 700; }
+        .uni-info p { font-size: 11px; opacity: 0.85; }
+        .academic-year { font-size: 12px; opacity: 0.85; font-weight: 500; background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 20px; }
+        .hero { background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%); color: white; padding: 60px 40px 50px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+        .hero::after { content: ''; position: absolute; bottom: -80px; left: -40px; width: 250px; height: 250px; background: rgba(255,255,255,0.04); border-radius: 50%; }
+        .hero-tag { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); padding: 5px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 36px; line-height: 1.25; margin-bottom: 14px; max-width: 680px; margin-left: auto; margin-right: auto; }
+        .hero p { font-size: 15px; opacity: 0.88; max-width: 560px; margin: 0 auto; line-height: 1.6; }
+        .stats-bar { background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: center; }
+        .stat { padding: 18px 40px; text-align: center; border-right: 1px solid var(--border); }
+        .stat:last-child { border-right: none; }
+        .stat-value { font-size: 22px; font-weight: 700; color: var(--green); line-height: 1; }
+        .stat-label { font-size: 11px; color: var(--text-light); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        main { max-width: 900px; margin: 0 auto; padding: 50px 24px; }
+        .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+        .section-title { font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+        .section-sub { font-size: 14px; color: var(--text-light); margin-bottom: 32px; }
+        .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 50px; }
+        .card { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 32px 28px; text-decoration: none; color: inherit; display: block; transition: all 0.25s ease; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--border); transition: background 0.25s; }
+        .card:hover { border-color: var(--green-light); transform: translateY(-4px); box-shadow: var(--shadow); }
+        .card:hover::before { background: var(--green-light); }
+        .card-icon { font-size: 36px; margin-bottom: 16px; display: block; }
+        .card-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 12px; }
+        .badge-baseline { background: #fff8e1; color: #8a6500; border: 1px solid #ffe082; }
+        .badge-proposed { background: var(--green-pale); color: var(--green); border: 1px solid var(--green-mid); }
+        .card h2 { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+        .card p { font-size: 13.5px; color: var(--text-light); line-height: 1.6; margin-bottom: 20px; }
+        .card-meta { display: flex; flex-direction: column; gap: 0; }
+        .card-meta-item { display: flex; justify-content: space-between; font-size: 12px; padding: 7px 0; border-top: 1px solid var(--green-pale); }
+        .meta-key { color: var(--text-light); }
+        .meta-val { font-weight: 600; color: var(--text-dark); }
+        .card-cta { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; font-size: 13px; font-weight: 600; color: var(--green); }
+        .team-section { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 40px; }
+        .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+        .team-member { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--off-white); border-radius: 10px; border: 1px solid var(--border); }
+        .member-avatar { width: 42px; height: 42px; background: var(--green-pale); border: 2px solid var(--green-mid); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .member-name { font-size: 13px; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
+        .member-matric { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+        .supervisor-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--green-pale); border-radius: 10px; border: 1px solid var(--green-mid); margin-top: 16px; }
+        .supervisor-avatar { width: 42px; height: 42px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .supervisor-name { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+        .supervisor-role { font-size: 11px; color: var(--green); font-weight: 500; margin-top: 2px; }
+        footer { background: var(--green); color: white; text-align: center; padding: 24px 40px; }
+        footer p { font-size: 13px; opacity: 0.9; line-height: 1.7; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <div class="uni-crest">🎓</div>
+        <div class="uni-info">
+            <h2>Kwara State University</h2>
+            <p>Faculty of ICT — Department of Computer Science</p>
+        </div>
+    </div>
+    <div class="academic-year">2025 / 2026</div>
+</header>
+
+<div class="hero">
+    <div class="hero-tag">Final Year Project</div>
+    <h1>Detecting Fake News Using PSO Feature Selection & Random Forest</h1>
+    <p>A comparative study of baseline Random Forest against PSO-optimised feature selection for improved fake news classification.</p>
+</div>
+
+<div class="stats-bar">
+    <div class="stat"><div class="stat-value">44,898</div><div class="stat-label">Articles Trained</div></div>
+    <div class="stat"><div class="stat-value">99.73%</div><div class="stat-label">PSO Accuracy</div></div>
+    <div class="stat"><div class="stat-value">2,523</div><div class="stat-label">PSO Features</div></div>
+    <div class="stat"><div class="stat-value">49.5%</div><div class="stat-label">Feature Reduction</div></div>
+</div>
+
+<main>
+    <div class="section-label">Select a Model</div>
+    <div class="section-title">Choose a Detection Method</div>
+    <p class="section-sub">Run the same article through both models to compare results.</p>
+
+    <div class="cards">
+        <a href="/baseline" class="card">
+            <span class="card-icon">🌲</span>
+            <span class="card-badge badge-baseline">Baseline Model</span>
+            <h2>Random Forest Only</h2>
+            <p>Standard Random Forest classifier using the full TF-IDF feature set with no optimisation applied.</p>
+            <div class="card-meta">
+                <div class="card-meta-item"><span class="meta-key">Features used</span><span class="meta-val">5,000</span></div>
+                <div class="card-meta-item"><span class="meta-key">Feature selection</span><span class="meta-val">None</span></div>
+                <div class="card-meta-item"><span class="meta-key">Accuracy</span><span class="meta-val">99.69%</span></div>
+            </div>
+            <div class="card-cta">Open Baseline Model →</div>
+        </a>
+        <a href="/pso" class="card">
+            <span class="card-icon">⚡</span>
+            <span class="card-badge badge-proposed">Proposed Method</span>
+            <h2>Random Forest + PSO</h2>
+            <p>PSO-optimised Random Forest using only the most relevant features identified by the swarm algorithm.</p>
+            <div class="card-meta">
+                <div class="card-meta-item"><span class="meta-key">Features used</span><span class="meta-val">2,523</span></div>
+                <div class="card-meta-item"><span class="meta-key">Feature selection</span><span class="meta-val">PSO</span></div>
+                <div class="card-meta-item"><span class="meta-key">Accuracy</span><span class="meta-val">99.73%</span></div>
+            </div>
+            <div class="card-cta">Open PSO Model →</div>
+        </a>
+    </div>
+
+    <div class="team-section">
+        <div class="section-label" style="margin-bottom:6px;">Project Team</div>
+        <div class="section-title" style="margin-bottom:4px;">Research Group</div>
+        <p style="font-size:13px; color:var(--text-light);">Department of Computer Science · Faculty of ICT · Kwara State University</p>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-avatar">👤</div>
+                <div><div class="member-name">Ojetola Oluwasegun Oluwatimileyin</div><div class="member-matric">Matric No: 23D/7CS/602</div></div>
+            </div>
+            <div class="team-member">
+                <div class="member-avatar">👤</div>
+                <div><div class="member-name">Olaniyi Aliyat Omolara</div><div class="member-matric">Matric No: 22/47CS/2249</div></div>
+            </div>
+            <div class="team-member">
+                <div class="member-avatar">👤</div>
+                <div><div class="member-name">Alao Sulaimon</div><div class="member-matric">Matric No: 22/47CS/2176</div></div>
+            </div>
+            <div class="team-member">
+                <div class="member-avatar">👤</div>
+                <div><div class="member-name">Ojo Joshua Oluwapelumi</div><div class="member-matric">Matric No: 22/47CS/2140</div></div>
+            </div>
+        </div>
+        <div class="supervisor-row">
+            <div class="supervisor-avatar">🎓</div>
+            <div><div class="supervisor-name">Dr. Abdulsalam</div><div class="supervisor-role">Project Supervisor</div></div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p><strong>Kwara State University</strong> · Faculty of Information Communication Technology · Department of Computer Science</p>
+    <p style="margin-top:6px;">Detecting Fake News Using PSO Feature Selection and Random Forest Algorithms · 2025/2026</p>
+    <p style="margin-top:8px; opacity:0.6; font-size:12px;">Built with Python · Flask · Scikit-learn · PySwarms</p>
+</footer>
+</body>
+</html>
