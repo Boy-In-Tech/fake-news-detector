@@ -11,7 +11,6 @@ from nltk.stem import PorterStemmer
 
 app = Flask(__name__)
 
-# Download model files from Google Drive if not present
 def download_models():
     files = {
         'rf_baseline.pkl': '18UKcB-AAI1xIvZkPx7vzVyhCfJAUMjwm',
@@ -27,13 +26,11 @@ def download_models():
 
 download_models()
 
-# Load all models
 rf_pso = joblib.load('rf_model.pkl')
 rf_baseline = joblib.load('rf_baseline.pkl')
 tfidf = joblib.load('tfidf_vectorizer.pkl')
 selected_features = joblib.load('selected_features.pkl')
 
-# Preprocessing
 ps = PorterStemmer()
 stop_words = set(stopwords.words('english'))
 
@@ -82,4 +79,5 @@ def pso():
     return render_template('pso.html', prediction=prediction, confidence=confidence, article=article)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
